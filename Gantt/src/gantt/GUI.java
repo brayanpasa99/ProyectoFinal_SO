@@ -33,14 +33,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUI implements ActionListener{
     
-    JLabel lbTitulo;
+    JLabel lbTitulo, lbInformacion;
     JTable tbInfo, tbGant;
-    JButton btIniciar, btProcesoAleatorio;
+    JButton btIniciar;
     DefaultTableModel modelTbInfo, modelTbGant;
     JScrollPane spTablaInfo;
     int personaActual;
     
-    String[] nombres = {"Matias Roca", "Julen Miguel", "Iluminada Gracia", "Felisa Montesinos", "Óscar Collado", "Ian Solana", "Serafin Mari", "Encarnacion del Moral", "Sebastiana Lin"};
+    String[] nombres = {"Matias Roca", "Julen Miguel", "Iluminada Gracia", "Felisa Montesinos", "Óscar Collado", "Ian Solana", "Serafin Mari", "Encarnacion del M.", "Sebastiana Lin"};
     
     public JPanel Titulo() {
 
@@ -52,7 +52,7 @@ public class GUI implements ActionListener{
         Panel.setBorder(borderPanel);
         Panel.setBackground(new java.awt.Color(204, 166, 166));
         
-        lbTitulo = new JLabel("Simulador de procesos FIFO",SwingConstants.CENTER);
+        lbTitulo = new JLabel("Algoritmo de Planificacion FIFO",SwingConstants.CENTER);
         lbTitulo.setBounds(0, 0, 1280, 50);
         lbTitulo.setVisible(true);
         lbTitulo.setFont(new java.awt.Font("Cambria", 0, 29));
@@ -68,7 +68,11 @@ public class GUI implements ActionListener{
         Panel.setFont(new java.awt.Font("Cambria", 2, 11));
         //Panel.setBackground(new java.awt.Color(204, 0, 166));
         
-        modelTbInfo = new DefaultTableModel();
+        modelTbInfo = new DefaultTableModel() {
+            public boolean isCellEditable(int row, int column) {
+                return false;//This causes all cells to be not editable
+            }
+        };
         tbInfo = new JTable();
         tbInfo.setModel(modelTbInfo);
         
@@ -100,7 +104,11 @@ public class GUI implements ActionListener{
         Panel.setFont(new java.awt.Font("Cambria", 2, 11));
         Panel.setBackground(new java.awt.Color(204, 166, 166));
 
-        modelTbGant = new DefaultTableModel();
+        modelTbGant = new DefaultTableModel(){
+            public boolean isCellEditable(int row, int column) {
+                return false;//This causes all cells to be not editable
+            }
+        };
         tbGant = new JTable();
         tbGant.setModel(modelTbGant);
         
@@ -109,6 +117,8 @@ public class GUI implements ActionListener{
             modelTbGant.addColumn(i-1);
             data[i] = i-1;
         }
+        
+        tbGant.getColumnModel().getColumn(0).setPreferredWidth(250);
                    
         modelTbGant.addRow(data);
         
@@ -127,26 +137,41 @@ public class GUI implements ActionListener{
     public JPanel Botonera(){
         JPanel Panel = new JPanel();
         Panel.setLayout(null);
-        Panel.setBounds(0, 620, 1280, 90);
+        Panel.setBounds(0, 620, 1280, 70);
         Panel.setFont(new java.awt.Font("Cambria", 2, 11));
         Panel.setBackground(new java.awt.Color(204, 166, 0));
         
         btIniciar = new JButton("Iniciar simulación");
-        btIniciar.setBounds(200, 10, 200, 45);
+        btIniciar.setBounds(500, 15, 200, 45);
         btIniciar.setVisible(true);
         btIniciar.addActionListener(this);
         Panel.add(btIniciar);
         Panel.setBackground(new java.awt.Color(198, 198, 198));
         
-        btProcesoAleatorio = new JButton("Insertar proceso aleatorio");
-        btProcesoAleatorio.setBounds(850, 10, 200, 45);
-        btProcesoAleatorio.setVisible(true);
-        btProcesoAleatorio.addActionListener(this);
-        Panel.add(btProcesoAleatorio);
-        Panel.setBackground(new java.awt.Color(198, 198, 198));
+       
 
         return Panel;
         
+    }
+    
+    public JPanel Informacion(){
+        JPanel Panel = new JPanel();
+        Panel.setLayout(null);
+        Panel.setBounds(0, 690, 1280, 70);
+        Panel.setFont(new java.awt.Font("Cambria", 2, 11));
+        Panel.setBackground(new java.awt.Color(142, 142, 142));
+        
+        lbInformacion = new JLabel();
+        lbInformacion.setText("Brayan A. Paredes, Kevin A. Borda, Mateo Yate G. - UDistrital - 2020-1");
+        lbInformacion.setFont(new java.awt.Font("Cambria", 0, 20));
+        lbInformacion.setForeground(Color.white);
+        lbInformacion.setBounds(250, 15, 700, 40);
+        lbInformacion.setVisible(true);
+        lbInformacion.setHorizontalAlignment(SwingConstants.CENTER);
+        //lbAsesora.setIcon(new ImageIcon("./imagenes/BankCashier.png"));
+        Panel.add(lbInformacion);
+        
+        return Panel;
     }
     
     @Override
@@ -247,7 +272,7 @@ public class GUI implements ActionListener{
                                 Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                                 JLabel label = (JLabel) comp;
                                 label.setForeground(Color.white);
-                                label.setBackground(Color.black);
+                                label.setBackground(new Color(55, 55, 55));
 
                                 return label;
                             }

@@ -32,6 +32,7 @@ public class Principal {
         JPanel PaTbInfo = GU.Tabla();
         JPanel PaGant = GU.Gant();
         JPanel PaBotonera = GU.Botonera();
+        JPanel PaInfo = GU.Informacion();
         
         ventana = new JFrame("");
         
@@ -39,8 +40,9 @@ public class Principal {
         ventana.add(PaTbInfo);
         ventana.add(PaGant);
         ventana.add(PaBotonera);
+        ventana.add(PaInfo);
         
-        ventana.setSize(1280, 720);
+        ventana.setSize(1280, 800);
         ventana.setTitle("Planificacion FIFO");
         
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
