@@ -1,7 +1,11 @@
 # gantt1
-Programa para realizar simulación de diagrama de Gantt
-Kevin Borda
-Mateo Yate
-Brayan Paredes
-No sé que más poner
-AJUAAAAAA
+ Programa que permite realizar la simulacion del algoritmo de planificacion FCFS (FiFo)
+
+*Nota: Ejecutar en NetBeans.*
+
+## Estudiantes:
+- Kevin A. Borda Penagos - 20171020088
+- Mateo Yate Gonzalez - 20171020087
+- Brayan A. Paredes Sanchez - 20171020106
+
+**Universidad Distrital Francisco Jose de Caldas - Sistemas Operativos - Profesor: Jorge H. Malaver - 2020-1**
