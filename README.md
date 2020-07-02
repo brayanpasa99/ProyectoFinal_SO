@@ -1,5 +1,5 @@
-# gantt1
- Programa que permite realizar la simulacion del algoritmo de planificacion FCFS (FiFo)
+# AlgoritmoSJF
+ Programa que permite realizar la simulacion del algoritmo de planificacion SJF 
 
 *Nota: Ejecutar en NetBeans.*
 
