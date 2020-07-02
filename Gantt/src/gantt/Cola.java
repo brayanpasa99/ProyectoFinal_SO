@@ -15,13 +15,16 @@ import java.util.ArrayList;
 public class Cola {
 
     protected Node Cabecera;
+    protected Node Final;
+    
+    ArrayList<String> ClientesArr;
     
     public Cola() {
         Cabecera = null;
     }
 
-    public void insert(int llegada, int rafaga, String nom) {
-        Node tmp = new Node(llegada, rafaga, nom);
+    public void insert(int llegada, int rafaga, String nom, int fil, int rRestante, int tBloqueo) {
+        Node tmp = new Node(llegada, rafaga, nom, fil, rRestante, tBloqueo);
         int l = longitud();
         if (l > 0) {
         Node aux1 = Cabecera;
@@ -34,7 +37,21 @@ public class Cola {
         else {
             Cabecera = tmp;
         }
+    }
     
+    public ArrayList imprimir() {
+        String clientes = "";
+        ClientesArr = new ArrayList();
+        if (!isEmpty()) {
+            Node tmp = Cabecera;
+            while (tmp != null) {
+                clientes = clientes + "CLIENTE: " + tmp.nombre + " - N° RECIBOS: " + tmp.getInfo() + "." + "\n";
+                ClientesArr.add("CLIENTE: " + tmp.nombre + " - N° RECIBOS: " + tmp.getInfo() + ".");
+                tmp = tmp.getNext();
+            }
+        }
+        
+        return ClientesArr;
     }
 
     public void extraer(int x) {
@@ -66,19 +83,18 @@ public class Cola {
         return cont;
     }
 
-    public String imprimir() {
-        String clientes = "";
+    public ArrayList<Node> nodosCola() {
+        ArrayList<Node> rafagas = new ArrayList<Node>();
         
         if (!isEmpty()) {
             Node tmp = Cabecera;
             while (tmp != null) {
-                
-                
-                tmp = tmp.getNext();
+                rafagas.add(tmp);
+                tmp = tmp.getNext();         
             }
         }
         
-        return clientes;
+        return rafagas;
     }
 
     public boolean isEmpty() {
@@ -88,4 +104,5 @@ public class Cola {
             return false;
         }
     }
+
 }

@@ -17,13 +17,19 @@ public class Node {
     public int fin;
     public int retorno;
     public int espera;
+    public int fila;
+    public int rafagaRestante;
+    public int tiempoBloqueo = 0;
     public String nombre;
     public Node next;
 
-    public Node(int llegada, int raf, String nom) {
+    public Node(int llegada, int raf, String nom, int fil, int rRestante, int tBloqueo) {
         rafaga = raf;
         next = null;
         nombre = nom;
+        fila = fil;
+        rafagaRestante = rRestante;
+        tiempoBloqueo = tBloqueo;
         this.llegada= llegada;
     }
 

@@ -33,6 +33,7 @@ public class Principal {
         JPanel PaGant = GU.Gant();
         JPanel PaBotonera = GU.Botonera();
         JPanel PaInfo = GU.Informacion();
+        JPanel PaBloqueados = GU.ColaBloqueos();
         
         ventana = new JFrame("");
         
@@ -41,8 +42,9 @@ public class Principal {
         ventana.add(PaGant);
         ventana.add(PaBotonera);
         ventana.add(PaInfo);
+        ventana.add(PaBloqueados);
         
-        ventana.setSize(1280, 800);
+        ventana.setSize(1280, 900);
         ventana.setTitle("Planificacion FIFO");
         
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
