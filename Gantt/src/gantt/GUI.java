@@ -52,11 +52,11 @@ public class GUI implements ActionListener {
     Random aleatorio = new Random(System.currentTimeMillis());
     
     //Se generan los objetos de las tablas de info. y gantt para el cliente actual
-    Object[] dataAuxInfo = new Object[7];
+    Object[] dataAuxInfo = new Object[8];
     Object[] dataGantt = new Object[30];
-    Object[] dataBloqueados = new Object[6];
+    Object[] dataBloqueados = new Object[7];
 
-    String[] nombres = {"Matias Roca", "Julen Miguel", "Iluminada Gracia", "Felisa Montesinos", "Óscar Collado", "Ian Solana", "Serafin Mari", "Encarnacion del M.", "Sebastiana Lin"};
+    String[] nombres = {"Belen Ferreira","Mia Collado","Marino Vega","Yassine Z.","Sira Osuna","Itziar Ferrero","Gerardo Marco","Marian Ojeda","Matias Roca", "Julen Miguel", "Iluminada Gracia", "Felisa Montesinos", "Óscar Collado", "Ian Solana", "Serafin Mari", "Encarnacion del M.", "Sebastiana Lin"};
 
     public JPanel Titulo() {
 
@@ -68,7 +68,7 @@ public class GUI implements ActionListener {
         Panel.setBorder(borderPanel);
         Panel.setBackground(new java.awt.Color(204, 166, 166));
 
-        lbTitulo = new JLabel("Algoritmo de Planificacion SJF", SwingConstants.CENTER);
+        lbTitulo = new JLabel("Algoritmo de Planificacion SJF con Prioridades", SwingConstants.CENTER);
         lbTitulo.setBounds(0, 0, 1280, 50);
         lbTitulo.setVisible(true);
         lbTitulo.setFont(new java.awt.Font("Cambria", 0, 29));
@@ -92,7 +92,8 @@ public class GUI implements ActionListener {
         };
         tbInfo = new JTable();
         tbInfo.setModel(modelTbInfo);
-
+        
+        modelTbInfo.addColumn("Prioridad");
         modelTbInfo.addColumn("Proceso");
         modelTbInfo.addColumn("T. Llegada");
         modelTbInfo.addColumn("Rafaga");
@@ -100,7 +101,7 @@ public class GUI implements ActionListener {
         modelTbInfo.addColumn("T. Final");
         modelTbInfo.addColumn("T. Retorno");
         modelTbInfo.addColumn("T. Espera");
-        modelTbInfo.addRow(new Object[]{"Proceso", "T. Llegada", "Rafaga", "T. Comienzo", "T. Final", "T. Retorno", "T. Espera"});
+        modelTbInfo.addRow(new Object[]{"Prioridad" ,"Proceso", "T. Llegada", "Rafaga", "T. Comienzo", "T. Final", "T. Retorno", "T. Espera"});
 
         tbInfo.getTableHeader().setReorderingAllowed(false);
         tbInfo.setBounds(0, 0, 1280, 280);
@@ -232,7 +233,8 @@ public class GUI implements ActionListener {
         };
         tbBloqueados = new JTable();
         tbBloqueados.setModel(modelTbBloqueados);
-
+        
+        modelTbBloqueados.addColumn("Prioridad");
         modelTbBloqueados.addColumn("Proceso");
         modelTbBloqueados.addColumn("T. Llegada");
         modelTbBloqueados.addColumn("Rafaga");
@@ -240,7 +242,7 @@ public class GUI implements ActionListener {
         modelTbBloqueados.addColumn("T. Bloqueo");
         modelTbBloqueados.addColumn("Rafaga restante");
         
-        modelTbBloqueados.addRow(new Object[]{"Proceso", "T. Llegada", "Rafaga", "T. Comienzo", "T. Bloqueo", "Rafaga restante"});
+        modelTbBloqueados.addRow(new Object[]{"Prioridad","Proceso", "T. Llegada", "Rafaga", "T. Comienzo", "T. Bloqueo", "Rafaga restante"});
 
         tbBloqueados.getTableHeader().setReorderingAllowed(false);
         tbBloqueados.setBounds(0, 0, 1280, 280);
@@ -270,7 +272,7 @@ public class GUI implements ActionListener {
 
                 if (clienteInicial == true) {
                     
-                    dataAuxInfo = new Object[7];
+                    dataAuxInfo = new Object[8];
                     dataGantt = new Object[30];
 
                     //Se organiza la cola
@@ -290,10 +292,12 @@ public class GUI implements ActionListener {
                     //Se muestra que cliente será atendido y se suben sus primeros datos a la tabla de informacion
                     System.out.println("Cliente que sera atendido:" + personaActual.nombre);
                     System.out.println("Comienzo inicial:" + personaActual.comienzo);
-                    dataAuxInfo[0] = personaActual.nombre;
-                    dataAuxInfo[1] = personaActual.llegada;
-                    dataAuxInfo[2] = personaActual.rafaga;
-                    dataAuxInfo[3] = personaActual.comienzo;
+                    
+                    dataAuxInfo[0] = personaActual.prioridad;
+                    dataAuxInfo[1] = personaActual.nombre;
+                    dataAuxInfo[2] = personaActual.llegada;
+                    dataAuxInfo[3] = personaActual.rafaga;
+                    dataAuxInfo[4] = personaActual.comienzo;
                     System.out.println("Numero de rafaga:" + personaActual.rafaga);
 
                     modelTbInfo.addRow(dataAuxInfo);
@@ -356,9 +360,9 @@ public class GUI implements ActionListener {
                             }
                         }
                         
-                        dataAuxInfo[4] = personaActual.fin;
-                        dataAuxInfo[5] = personaActual.retorno;
-                        dataAuxInfo[6] = personaActual.espera;
+                        dataAuxInfo[5] = personaActual.fin;
+                        dataAuxInfo[6] = personaActual.retorno;
+                        dataAuxInfo[7] = personaActual.espera;
 
                         modelTbInfo.removeRow(modelTbInfo.getRowCount() - 1);
                         modelTbInfo.addRow(dataAuxInfo);
@@ -402,14 +406,16 @@ public class GUI implements ActionListener {
 
             //Se le asigna una rafaga y un nombre aleatorio
             int nuevoClientRagafa = aleatorio.nextInt(4) + 2;
-            int nuevoClientNombre = aleatorio.nextInt(9);
+            int nuevoClientNombre = aleatorio.nextInt(nombres.length);
 
             //Se muestra la informacion del nuevo cliente
             System.out.println("Nombre del nuevo cliente: " + nombres[nuevoClientNombre]);
             System.out.println("Rafaga del nuevo cliente: " + nuevoClientRagafa);
 
             //Se inserta el nuevo cliente en la cola
-            clientes.insert(tiempo, nuevoClientRagafa, nombres[nuevoClientNombre], fila, 0,0);
+            aleatorio.setSeed(System.currentTimeMillis());
+            int prioPrueba = aleatorio.nextInt(4)+1;
+            clientes.insert(prioPrueba,tiempo, nuevoClientRagafa, nombres[nuevoClientNombre], fila, 0,0);
             fila++;
             System.out.println("///////////");
             System.out.println("");
@@ -419,7 +425,7 @@ public class GUI implements ActionListener {
                 JOptionPane.showMessageDialog(null, "La cola esta vacia");
             } else {
 
-                clientesBloqueados.insert(clientes.Cabecera.llegada, clientes.Cabecera.rafaga, clientes.Cabecera.nombre, clientes.Cabecera.fila, clientes.Cabecera.comienzo + clientes.Cabecera.rafaga - tiempo, tiempo);
+                clientesBloqueados.insert(clientes.Cabecera.prioridad, clientes.Cabecera.llegada, clientes.Cabecera.rafaga, clientes.Cabecera.nombre, clientes.Cabecera.fila, clientes.Cabecera.comienzo + clientes.Cabecera.rafaga - tiempo, tiempo);
                 JOptionPane.showMessageDialog(null, "El proceso en ejecucion sera bloqueado");
                 
                 Node aux = clientesBloqueados.Cabecera;
@@ -434,23 +440,23 @@ public class GUI implements ActionListener {
                 fila ++;
                 clienteInicial = true;
                 
-                dataAuxInfo[4] = tiempo;
-                dataAuxInfo[5] = tiempo - aux.llegada;
-                dataAuxInfo[6] = (tiempo - aux.llegada) - (aux.rafaga - aux.rafagaRestante);
+                dataAuxInfo[5] = tiempo;
+                dataAuxInfo[6] = tiempo - aux.llegada;
+                dataAuxInfo[7] = (tiempo - aux.llegada) - (aux.rafaga - aux.rafagaRestante);
                 
                 modelTbInfo.removeRow(modelTbInfo.getRowCount() - 1);
                 modelTbInfo.addRow(dataAuxInfo);
                 
-                
-                dataBloqueados[0] = aux.nombre;
-                dataBloqueados[1] = aux.llegada;
-                dataBloqueados[2] = aux.rafaga;
-                dataBloqueados[3] = aux.comienzo;
+                dataBloqueados[0] = aux.prioridad;
+                dataBloqueados[1] = aux.nombre;
+                dataBloqueados[2] = aux.llegada;
+                dataBloqueados[3] = aux.rafaga;
+                dataBloqueados[4] = aux.comienzo;
                 
                 //Bloqueo y restante
-                dataBloqueados[4] = tiempo;
+                dataBloqueados[5] = tiempo;
                 //aux.rafagaRestante = aux.comienzo + aux.rafaga - tiempo;
-                dataBloqueados[5] = aux.rafagaRestante;
+                dataBloqueados[6] = aux.rafagaRestante;
                 
                 modelTbBloqueados.addRow(dataBloqueados);
                 
@@ -461,7 +467,7 @@ public class GUI implements ActionListener {
             if (clientesBloqueados.longitud() == 0){
                 JOptionPane.showMessageDialog(null, "No hay procesos bloqueados");
             } else {
-                clientes.insert(tiempo, clientesBloqueados.Cabecera.rafagaRestante, clientesBloqueados.Cabecera.nombre + " - (D)", clientesBloqueados.Cabecera.fila, 0, clientesBloqueados.Cabecera.tiempoBloqueo);
+                clientes.insert(clientesBloqueados.Cabecera.prioridad, tiempo, clientesBloqueados.Cabecera.rafagaRestante, clientesBloqueados.Cabecera.nombre + " - (D)", clientesBloqueados.Cabecera.fila, 0, clientesBloqueados.Cabecera.tiempoBloqueo);
                 clientesBloqueados.extraer(1);
                 
                 modelTbBloqueados.removeRow(1);
@@ -475,7 +481,7 @@ public class GUI implements ActionListener {
 
         for (int i = 1; i < colaOrg.size(); i++) {
             for (int j = 0; j < colaOrg.size() - 1; j++) {
-                if (colaOrg.get(j).rafaga > colaOrg.get(j + 1).rafaga) {
+                if (colaOrg.get(j).prioridad > colaOrg.get(j + 1).prioridad) {
                     Node temp = colaOrg.get(j);
                     colaOrg.set(j, colaOrg.get(j+1));
                     colaOrg.set(j+1, temp);
@@ -484,7 +490,7 @@ public class GUI implements ActionListener {
         }
 
         for (int k = 0; k < colaOrg.size(); k++) {
-            clientes2.insert(colaOrg.get(k).llegada, colaOrg.get(k).rafaga, colaOrg.get(k).nombre, colaOrg.get(k).fila, colaOrg.get(k).rafagaRestante, colaOrg.get(k).tiempoBloqueo);
+            clientes2.insert(colaOrg.get(k).prioridad, colaOrg.get(k).llegada, colaOrg.get(k).rafaga, colaOrg.get(k).nombre, colaOrg.get(k).fila, colaOrg.get(k).rafagaRestante, colaOrg.get(k).tiempoBloqueo);
         }
 
     }

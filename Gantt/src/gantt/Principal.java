@@ -45,7 +45,7 @@ public class Principal {
         ventana.add(PaBloqueados);
         
         ventana.setSize(1280, 900);
-        ventana.setTitle("Planificacion FIFO");
+        ventana.setTitle("Planificacion FIFO con Prioridades");
         
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setLocationRelativeTo(null);

@@ -5,6 +5,8 @@
  */
 package gantt;
 
+import java.util.Random;
+
 /**
  *
  * @author KevinB
@@ -19,11 +21,13 @@ public class Node {
     public int espera;
     public int fila;
     public int rafagaRestante;
+    public int prioridad;
     public int tiempoBloqueo = 0;
     public String nombre;
     public Node next;
+        
 
-    public Node(int llegada, int raf, String nom, int fil, int rRestante, int tBloqueo) {
+    public Node(int prior, int llegada, int raf, String nom, int fil, int rRestante, int tBloqueo) {
         rafaga = raf;
         next = null;
         nombre = nom;
@@ -31,6 +35,7 @@ public class Node {
         rafagaRestante = rRestante;
         tiempoBloqueo = tBloqueo;
         this.llegada= llegada;
+        prioridad = prior;
     }
 
     public void setRafaga(int o) {

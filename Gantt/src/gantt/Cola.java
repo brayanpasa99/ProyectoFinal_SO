@@ -23,8 +23,8 @@ public class Cola {
         Cabecera = null;
     }
 
-    public void insert(int llegada, int rafaga, String nom, int fil, int rRestante, int tBloqueo) {
-        Node tmp = new Node(llegada, rafaga, nom, fil, rRestante, tBloqueo);
+    public void insert(int prior, int llegada, int rafaga, String nom, int fil, int rRestante, int tBloqueo) {
+        Node tmp = new Node(prior, llegada, rafaga, nom, fil, rRestante, tBloqueo);
         int l = longitud();
         if (l > 0) {
         Node aux1 = Cabecera;
