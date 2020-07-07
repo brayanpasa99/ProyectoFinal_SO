@@ -343,9 +343,7 @@ public class GUI implements ActionListener {
                         personaActual.retorno = personaActual.fin - personaActual.llegada;
                         personaActual.espera = personaActual.retorno - personaActual.rafaga;
 
-                        dataAuxInfo[4] = personaActual.fin;
-                        dataAuxInfo[5] = personaActual.retorno;
-                        dataAuxInfo[6] = personaActual.espera;
+                        
 
                         for (int u = personaActual.llegada + 1; u < personaActual.comienzo + 1; u++) {
                             dataGantt[u] = "∞";
@@ -354,10 +352,13 @@ public class GUI implements ActionListener {
                         if (personaActual.tiempoBloqueo != 0) {
                             for (int u = personaActual.tiempoBloqueo + 1; u < personaActual.llegada + 1; u++) {
                                 dataGantt[u] = "B";
+                                personaActual.espera ++;
                             }
                         }
                         
-                        
+                        dataAuxInfo[4] = personaActual.fin;
+                        dataAuxInfo[5] = personaActual.retorno;
+                        dataAuxInfo[6] = personaActual.espera;
 
                         modelTbInfo.removeRow(modelTbInfo.getRowCount() - 1);
                         modelTbInfo.addRow(dataAuxInfo);
@@ -432,10 +433,11 @@ public class GUI implements ActionListener {
                 clientes.extraer(1);
                 fila ++;
                 clienteInicial = true;
-
-                dataAuxInfo[4] = "Bloqueado";
-                dataAuxInfo[5] = "Bloqueado";
-                dataAuxInfo[6] = "Bloqueado";
+                
+                dataAuxInfo[4] = tiempo;
+                dataAuxInfo[5] = tiempo - aux.llegada;
+                dataAuxInfo[6] = (tiempo - aux.llegada) - (aux.rafaga - aux.rafagaRestante);
+                
                 modelTbInfo.removeRow(modelTbInfo.getRowCount() - 1);
                 modelTbInfo.addRow(dataAuxInfo);
                 
