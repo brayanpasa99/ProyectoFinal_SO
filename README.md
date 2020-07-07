@@ -1,5 +1,5 @@
-# AlgoritmoSJF
- Programa que permite realizar la simulacion del algoritmo de planificacion SJF 
+# Algoritmo SJF con Prioridades
+ Programa que permite realizar la simulacion del algoritmo de planificacion SJF teniendo en cuenta la prioridad 
 
 *Nota: Ejecutar en NetBeans.*
 
