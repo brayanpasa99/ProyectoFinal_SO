@@ -23,11 +23,13 @@ public class Node {
     public int rafagaRestante;
     public int prioridad;
     public int tiempoBloqueo = 0;
+    public int rafagaEjecutada = 0;
     public String nombre;
+    public int tfPrecursor;
     public Node next;
         
 
-    public Node(int prior, int llegada, int raf, String nom, int fil, int rRestante, int tBloqueo) {
+    public Node(int prior, int llegada, int raf, String nom, int fil, int rRestante, int tBloqueo, int rEjecutada, int tfPrec) {
         rafaga = raf;
         next = null;
         nombre = nom;
@@ -36,6 +38,8 @@ public class Node {
         tiempoBloqueo = tBloqueo;
         this.llegada= llegada;
         prioridad = prior;
+        rafagaEjecutada = rEjecutada;
+        tfPrecursor = tfPrec;
     }
 
     public void setRafaga(int o) {

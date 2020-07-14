@@ -32,7 +32,9 @@ import javax.swing.table.DefaultTableModel;
  * @author mateo
  */
 public class GUI implements ActionListener {
-
+    
+    int Quantum = 3;
+    
     JLabel lbTitulo, lbInformacion, lbTiempo;
     JTable tbInfo, tbGant, tbBloqueados;
     JButton btIniciar, btAgregar, btBloquear, btDesbloquear;
@@ -41,6 +43,7 @@ public class GUI implements ActionListener {
     int personaActual;
     int fila = 0;
     boolean clienteInicial = true;
+    int posicion = 0;
     
     //Se crea una cola de clientes
     Cola clientes = new Cola();
@@ -68,7 +71,7 @@ public class GUI implements ActionListener {
         Panel.setBorder(borderPanel);
         Panel.setBackground(new java.awt.Color(204, 166, 166));
 
-        lbTitulo = new JLabel("Algoritmo de Planificacion SJF con Prioridades", SwingConstants.CENTER);
+        lbTitulo = new JLabel("Algoritmo de Planificacion Round Robin con Quantum de 3", SwingConstants.CENTER);
         lbTitulo.setBounds(0, 0, 1280, 50);
         lbTitulo.setVisible(true);
         lbTitulo.setFont(new java.awt.Font("Cambria", 0, 29));
@@ -274,12 +277,14 @@ public class GUI implements ActionListener {
                     
                     dataAuxInfo = new Object[8];
                     dataGantt = new Object[30];
-
+                    
+                    /*Organizar la cola*/
                     //Se organiza la cola
-                    organizarCola();
-                    clientes = clientes2;
-                    clientes2 = new Cola();
+                    //organizarCola();
+                    //clientes = clientes2;
+                    //clientes2 = new Cola();
                     personaActual = clientes.Cabecera;
+                    Quantum = 0;
 
                     //Se genera una nueva semilla aleatoria
                     aleatorio.setSeed(System.currentTimeMillis());
@@ -308,91 +313,138 @@ public class GUI implements ActionListener {
                     clienteInicial = false;
                 }
 
-                //Si la cola no esta vacia y el tiempo global no ha excedido 30 unidades
-                if (clientes.longitud() != 0 || tiempo <= 30) {
+                
+                if (Quantum < 3) {
+                    Quantum++;
 
-                    //Si el proceso actual aun tiene rafaga
-                    if (tiempo < (personaActual.comienzo + personaActual.rafaga - 1)) {
+                    //Si la cola no esta vacia y el tiempo global no ha excedido 30 unidades
+                    if (clientes.longitud() != 0 || tiempo <= 30) {
+                        personaActual.rafagaEjecutada ++;
+                        //Si el proceso actual aun tiene rafaga
+                        if (tiempo < (personaActual.comienzo + personaActual.rafaga - 1)) {
 
-                        //Se muestra la informacion
-                        System.out.println("");
-                        System.out.println("Estamos en el tiempo: " + tiempo);
-                        System.out.println("Se esta atendiendo a " + personaActual.nombre);
+                            //Se muestra la informacion
+                            
+                            System.out.println("");
+                            System.out.println("Estamos en el tiempo: " + tiempo);
+                            System.out.println("Se esta atendiendo a " + personaActual.nombre);
 
-                        //En el tiempo actual se llena  esa unidad en el modelo de gantt
-                        dataGantt[tiempo + 1] = "X";
+                            //En el tiempo actual se llena  esa unidad en el modelo de gantt
+                            dataGantt[tiempo + 1] = "X";
 
-                        modelTbGant.removeRow(modelTbGant.getRowCount() - 1);
-                        modelTbGant.addRow(dataGantt);
+                            modelTbGant.removeRow(modelTbGant.getRowCount() - 1);
+                            modelTbGant.addRow(dataGantt);
 
-                        //Se aumenta el tiempo
-                        tiempo++;
+                            //Se aumenta el tiempo
+                            tiempo++;
+
+                        } else {
+
+                            System.out.println("Entre aqui");
+
+                            //Se muestra la informacion
+                            System.out.println("");
+                            System.out.println("Estamos en el tiempo: " + tiempo);
+                            System.out.println("Se esta atendiendo a " + personaActual.nombre);
+
+                            //En el tiempo actual se llena  esa unidad en el modelo de gantt
+                            dataGantt[tiempo + 1] = "X";
+
+                            modelTbGant.removeRow(modelTbGant.getRowCount() - 1);
+                            modelTbGant.addRow(dataGantt);
+
+                            personaActual.fin = personaActual.comienzo + personaActual.rafaga;
+                            personaActual.retorno = personaActual.fin - personaActual.llegada;
+                            personaActual.espera = personaActual.retorno - personaActual.rafagaEjecutada;
+
+                            for (int u = personaActual.tfPrecursor + 1; u < personaActual.comienzo + 1; u++) {
+                                dataGantt[u] = "∞";
+                            }
+                            
+                            /*for (int u = personaActual.llegada + 1; u < personaActual.comienzo + 1; u++) {
+                                dataGantt[u] = "∞";
+                            }*/
+                            
+                            JOptionPane.showMessageDialog(null, personaActual.espera);
+                            
+                            if (personaActual.tiempoBloqueo != 0) {
+                                for (int u = personaActual.tiempoBloqueo + 1; u < personaActual.llegada + 1; u++) {
+                                    dataGantt[u] = "B";
+                                    personaActual.espera++;
+                                }
+                            }
+
+                            dataAuxInfo[5] = personaActual.fin;
+                            dataAuxInfo[6] = personaActual.retorno;
+                            dataAuxInfo[7] = personaActual.espera;
+
+                            modelTbInfo.removeRow(modelTbInfo.getRowCount() - 1);
+                            modelTbInfo.addRow(dataAuxInfo);
+                            
+                            modelTbGant.removeRow(modelTbGant.getRowCount() - 1);
+                            modelTbGant.addRow(dataGantt);
+
+                            System.out.println("------------------------");
+                            System.out.println("Resumen de: " + personaActual.nombre);
+                            System.out.println("Llegada en: " + personaActual.llegada);
+                            System.out.println("Rafaga de: " + personaActual.rafaga);
+                            System.out.println("Comienzo final: " + personaActual.comienzo);
+                            personaActual.fin = personaActual.rafaga + personaActual.comienzo;
+                            System.out.println("Tiempo final: " + personaActual.fin);
+                            personaActual.retorno = personaActual.fin - personaActual.llegada;
+                            System.out.println("Tiempo de retorno: " + personaActual.retorno);
+                            personaActual.espera = personaActual.retorno - personaActual.rafaga;
+                            System.out.println("Salio en: " + tiempo);
+                            System.out.println("Fila: " + personaActual.fila);
+                            System.out.println("Rafaga Ejecutada: " + personaActual.rafagaEjecutada);
+                            System.out.println("------------------------");
+                            System.out.println("(Pausa incomoda para leer el resumen)");
+                            clientes.extraer(1);
+                            clienteInicial = true;
+                            tiempo++;
+                        }
 
                     } else {
 
-                        System.out.println("Entre aqui");
+                        JOptionPane.showMessageDialog(null, "Tiempo excedido o COLA VACIA");
 
-                        //Se muestra la informacion
-                        System.out.println("");
-                        System.out.println("Estamos en el tiempo: " + tiempo);
-                        System.out.println("Se esta atendiendo a " + personaActual.nombre);
-
-                        //En el tiempo actual se llena  esa unidad en el modelo de gantt
-                        dataGantt[tiempo + 1] = "X";
-
-                        modelTbGant.removeRow(modelTbGant.getRowCount() - 1);
-                        modelTbGant.addRow(dataGantt);
-
-                        personaActual.fin = personaActual.comienzo + personaActual.rafaga;
-                        personaActual.retorno = personaActual.fin - personaActual.llegada;
-                        personaActual.espera = personaActual.retorno - personaActual.rafaga;
-
-                        
-
-                        for (int u = personaActual.llegada + 1; u < personaActual.comienzo + 1; u++) {
-                            dataGantt[u] = "∞";
-                        }
-                        
-                        if (personaActual.tiempoBloqueo != 0) {
-                            for (int u = personaActual.tiempoBloqueo + 1; u < personaActual.llegada + 1; u++) {
-                                dataGantt[u] = "B";
-                                personaActual.espera ++;
-                            }
-                        }
-                        
-                        dataAuxInfo[5] = personaActual.fin;
-                        dataAuxInfo[6] = personaActual.retorno;
-                        dataAuxInfo[7] = personaActual.espera;
-
-                        modelTbInfo.removeRow(modelTbInfo.getRowCount() - 1);
-                        modelTbInfo.addRow(dataAuxInfo);
-                        modelTbGant.removeRow(modelTbGant.getRowCount() - 1);
-                        modelTbGant.addRow(dataGantt);
-
-                        System.out.println("------------------------");
-                        System.out.println("Resumen de: " + personaActual.nombre);
-                        System.out.println("Llegada en: " + personaActual.llegada);
-                        System.out.println("Rafaga de: " + personaActual.rafaga);
-                        System.out.println("Comienzo final: " + personaActual.comienzo);
-                        personaActual.fin = personaActual.rafaga + personaActual.comienzo;
-                        System.out.println("Tiempo final: " + personaActual.fin);
-                        personaActual.retorno = personaActual.fin - personaActual.llegada;
-                        System.out.println("Tiempo de retorno: " + personaActual.retorno);
-                        personaActual.espera = personaActual.retorno - personaActual.rafaga;
-                        System.out.println("Salio en: " + tiempo);
-                        System.out.println("Fila: " + personaActual.fila);
-                        System.out.println("------------------------");
-                        System.out.println("(Pausa incomoda para leer el resumen)");
-                        clientes.extraer(1);
-                        clienteInicial = true;
-                        tiempo++;
                     }
 
                 } else {
+                    JOptionPane.showMessageDialog(null, "Quantum excedido...");
+                    Node auxNode = clientes.Cabecera;     
+                    clientes.insert(auxNode.prioridad,auxNode.llegada, auxNode.rafaga - 3, auxNode.nombre + " (E)" , auxNode.fila, auxNode.rafagaRestante, auxNode.tiempoBloqueo, auxNode.rafagaEjecutada, tiempo);
+                    clientes.extraer(1);
+                    clienteInicial = true;
+                    
+                    dataAuxInfo[5] = tiempo;
+                    dataAuxInfo[6] = tiempo - auxNode.llegada;
+                    dataAuxInfo[7] = (tiempo - auxNode.llegada) - auxNode.rafagaEjecutada;
+                    //dataAuxInfo[7] = (tiempo - auxNode.llegada) - (auxNode.rafaga - auxNode.rafagaRestante);
+                    
+                    modelTbInfo.removeRow(modelTbInfo.getRowCount() - 1);
+                    modelTbInfo.addRow(dataAuxInfo);
+                    
+                    for (int u = personaActual.tfPrecursor + 1; u < personaActual.comienzo + 1; u++) {
+                        dataGantt[u] = "∞";
+                    }
+                    
+                    
+                    if (personaActual.tiempoBloqueo != 0) {
+                        for (int u = personaActual.tiempoBloqueo + 1; u < personaActual.llegada + 1; u++) {
+                            dataGantt[u] = "B";
+                            personaActual.espera++;
+                        }
+                        personaActual.tiempoBloqueo = 0;
+                    }
 
-                    JOptionPane.showMessageDialog(null, "Tiempo excedido o COLA VACIA");
 
+                    modelTbGant.removeRow(modelTbGant.getRowCount() - 1);
+                    modelTbGant.addRow(dataGantt);
+                    
+                    Quantum = 0;
                 }
+
             }
 
         }
@@ -405,27 +457,30 @@ public class GUI implements ActionListener {
             System.out.println("Llego un nuevo cliente");
 
             //Se le asigna una rafaga y un nombre aleatorio
-            int nuevoClientRagafa = aleatorio.nextInt(4) + 2;
-            int nuevoClientNombre = aleatorio.nextInt(nombres.length);
+            int nuevoClientRagafa = aleatorio.nextInt(7) + 6;
+            //int nuevoClientNombre = ;
+            
+            //int nuevoClientNombre = aleatorio.nextInt(nombres.length);
 
             //Se muestra la informacion del nuevo cliente
-            System.out.println("Nombre del nuevo cliente: " + nombres[nuevoClientNombre]);
+            System.out.println("Nombre del nuevo cliente: " + "P" + Integer.toString(posicion));
             System.out.println("Rafaga del nuevo cliente: " + nuevoClientRagafa);
 
             //Se inserta el nuevo cliente en la cola
             aleatorio.setSeed(System.currentTimeMillis());
             int prioPrueba = aleatorio.nextInt(4)+1;
-            clientes.insert(prioPrueba,tiempo, nuevoClientRagafa, nombres[nuevoClientNombre], fila, 0,0);
+            clientes.insert(prioPrueba,tiempo, nuevoClientRagafa, "P" + Integer.toString(posicion), fila, 0,0,0,tiempo);
             fila++;
             System.out.println("///////////");
             System.out.println("");
+            posicion ++;
 
         } else if (e.getSource() == btBloquear) {
             if (clientes.longitud() == 0) {
                 JOptionPane.showMessageDialog(null, "La cola esta vacia");
             } else {
 
-                clientesBloqueados.insert(clientes.Cabecera.prioridad, clientes.Cabecera.llegada, clientes.Cabecera.rafaga, clientes.Cabecera.nombre, clientes.Cabecera.fila, clientes.Cabecera.comienzo + clientes.Cabecera.rafaga - tiempo, tiempo);
+                clientesBloqueados.insert(clientes.Cabecera.prioridad, clientes.Cabecera.llegada, clientes.Cabecera.rafaga, clientes.Cabecera.nombre, clientes.Cabecera.fila, clientes.Cabecera.comienzo + clientes.Cabecera.rafaga - tiempo, tiempo,0,clientes.Cabecera.tfPrecursor);
                 JOptionPane.showMessageDialog(null, "El proceso en ejecucion sera bloqueado");
                 
                 Node aux = clientesBloqueados.Cabecera;
@@ -467,7 +522,7 @@ public class GUI implements ActionListener {
             if (clientesBloqueados.longitud() == 0){
                 JOptionPane.showMessageDialog(null, "No hay procesos bloqueados");
             } else {
-                clientes.insert(clientesBloqueados.Cabecera.prioridad, tiempo, clientesBloqueados.Cabecera.rafagaRestante, clientesBloqueados.Cabecera.nombre + " - (D)", clientesBloqueados.Cabecera.fila, 0, clientesBloqueados.Cabecera.tiempoBloqueo);
+                clientes.insert(clientesBloqueados.Cabecera.prioridad, tiempo, clientesBloqueados.Cabecera.rafagaRestante, clientesBloqueados.Cabecera.nombre + " - (D)", clientesBloqueados.Cabecera.fila, 0, clientesBloqueados.Cabecera.tiempoBloqueo, clientesBloqueados.Cabecera.rafagaEjecutada, tiempo);
                 clientesBloqueados.extraer(1);
                 
                 modelTbBloqueados.removeRow(1);
@@ -490,7 +545,7 @@ public class GUI implements ActionListener {
         }
 
         for (int k = 0; k < colaOrg.size(); k++) {
-            clientes2.insert(colaOrg.get(k).prioridad, colaOrg.get(k).llegada, colaOrg.get(k).rafaga, colaOrg.get(k).nombre, colaOrg.get(k).fila, colaOrg.get(k).rafagaRestante, colaOrg.get(k).tiempoBloqueo);
+            clientes2.insert(colaOrg.get(k).prioridad, colaOrg.get(k).llegada, colaOrg.get(k).rafaga, colaOrg.get(k).nombre, colaOrg.get(k).fila, colaOrg.get(k).rafagaRestante, colaOrg.get(k).tiempoBloqueo, colaOrg.get(k).rafagaEjecutada, colaOrg.get(k).tfPrecursor);
         }
 
     }
