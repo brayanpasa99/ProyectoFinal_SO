@@ -1,5 +1,5 @@
-# Algoritmo SJF con Prioridades
- Programa que permite realizar la simulacion del algoritmo de planificacion SJF teniendo en cuenta la prioridad 
+# Algoritmo Round Robin
+ Programa que permite realizar la simulacion del algoritmo de planificación expulsivo Round Robin teniendo en cuenta la prioridad y un valor de un Quantum determinado.
 
 *Nota: Ejecutar en NetBeans.*
 
