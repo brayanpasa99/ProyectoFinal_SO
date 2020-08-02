@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gantt;
+package roundrobin;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -20,15 +20,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
-
 
 /**
  *
@@ -38,7 +35,7 @@ public class GUI implements ActionListener {
     
     int Quantum = 3;
     
-    JLabel lbTitulo, lbInformacion, lbTiempo, lbRafaga, lbCola;
+    JLabel lbTitulo, lbInformacion, lbTiempo;
     JTable tbInfo, tbGant, tbBloqueados;
     JButton btIniciar, btAgregar, btBloquear, btDesbloquear;
     DefaultTableModel modelTbInfo, modelTbGant, modelTbBloqueados;
@@ -48,16 +45,9 @@ public class GUI implements ActionListener {
     boolean clienteInicial = true;
     int posicion = 0;
     
-    int colaActual = 1;
-    
-    JTextField tfRafaga, tfCola;
-        
     //Se crea una cola de clientes
     Cola clientes = new Cola();
-    Cola clientesPrioridades = new Cola();
-    Cola clientesSRTF = new Cola();
-    
-    Cola clientesOrganizar = new Cola();
+    Cola clientes2 = new Cola();
     Cola clientesBloqueados = new Cola();
     
     //Se inicializa el tiempo en cero
@@ -75,14 +65,14 @@ public class GUI implements ActionListener {
 
         JPanel Panel = new JPanel();
         Panel.setLayout(null);
-        Panel.setBounds(0, 0, 1900, 50);
+        Panel.setBounds(0, 0, 1280, 50);
 
         Border borderPanel = new TitledBorder(new EtchedBorder());
         Panel.setBorder(borderPanel);
         Panel.setBackground(new java.awt.Color(204, 166, 166));
 
-        lbTitulo = new JLabel("Proyecto de Multicolas - Round Robin, SRTF & Prioridades", SwingConstants.CENTER);
-        lbTitulo.setBounds(0, 0, 1900, 50);
+        lbTitulo = new JLabel("Algoritmo de Planificacion Round Robin con Quantum de 3", SwingConstants.CENTER);
+        lbTitulo.setBounds(0, 0, 1280, 50);
         lbTitulo.setVisible(true);
         lbTitulo.setFont(new java.awt.Font("Cambria", 0, 29));
         Panel.add(lbTitulo);
@@ -93,7 +83,7 @@ public class GUI implements ActionListener {
     public JPanel Tabla() {
         JPanel Panel = new JPanel();
         Panel.setLayout(null);
-        Panel.setBounds(0, 50, 1900, 300);
+        Panel.setBounds(0, 50, 1280, 300);
         Panel.setFont(new java.awt.Font("Cambria", 2, 11));
         //Panel.setBackground(new java.awt.Color(204, 0, 166));
 
@@ -114,11 +104,10 @@ public class GUI implements ActionListener {
         modelTbInfo.addColumn("T. Final");
         modelTbInfo.addColumn("T. Retorno");
         modelTbInfo.addColumn("T. Espera");
-        modelTbInfo.addColumn("Cola");
-        modelTbInfo.addRow(new Object[]{"Prioridad" ,"Proceso", "T. Llegada", "Rafaga", "T. Comienzo", "T. Final", "T. Retorno", "T. Espera", "Cola"});
+        modelTbInfo.addRow(new Object[]{"Prioridad" ,"Proceso", "T. Llegada", "Rafaga", "T. Comienzo", "T. Final", "T. Retorno", "T. Espera"});
 
         tbInfo.getTableHeader().setReorderingAllowed(false);
-        tbInfo.setBounds(0, 0, 1900, 280);
+        tbInfo.setBounds(0, 0, 1280, 280);
         tbInfo.setVisible(true);
 
         tbInfo.setPreferredScrollableViewportSize(new Dimension(450, 63));
@@ -132,7 +121,7 @@ public class GUI implements ActionListener {
     public JPanel Gant() {
         JPanel Panel = new JPanel();
         Panel.setLayout(null);
-        Panel.setBounds(0, 340, 1900, 280);
+        Panel.setBounds(0, 340, 1280, 280);
         Panel.setFont(new java.awt.Font("Cambria", 2, 11));
         Panel.setBackground(new java.awt.Color(204, 166, 166));
 
@@ -145,8 +134,8 @@ public class GUI implements ActionListener {
         tbGant = new JTable();
         tbGant.setModel(modelTbGant);
 
-        Object[] data = new Object[51];
-        for (int i = 1; i < 50; i++) {
+        Object[] data = new Object[31];
+        for (int i = 1; i < 31; i++) {
             modelTbGant.addColumn(i - 1);
             data[i] = i - 1;
         }
@@ -156,7 +145,7 @@ public class GUI implements ActionListener {
         modelTbGant.addRow(data);
 
         tbGant.getTableHeader().setReorderingAllowed(false);
-        tbGant.setBounds(0, 10, 1900, 280);
+        tbGant.setBounds(0, 10, 1280, 280);
         tbGant.setVisible(true);
 
         tbGant.setPreferredScrollableViewportSize(new Dimension(450, 63));
@@ -170,7 +159,7 @@ public class GUI implements ActionListener {
     public JPanel Botonera() {
         JPanel Panel = new JPanel();
         Panel.setLayout(null);
-        Panel.setBounds(0, 620, 1900, 70);
+        Panel.setBounds(0, 620, 1280, 70);
         Panel.setFont(new java.awt.Font("Cambria", 2, 11));
         Panel.setBackground(new java.awt.Color(204, 166, 0));
 
@@ -182,49 +171,28 @@ public class GUI implements ActionListener {
         Panel.setBackground(new java.awt.Color(198, 198, 198));
 
         btAgregar = new JButton("Agregar proceso");
-        btAgregar.setBounds(450, 15, 200, 45);
+        btAgregar.setBounds(300, 15, 200, 45);
         btAgregar.setVisible(true);
         btAgregar.addActionListener(this);
         Panel.add(btAgregar);
         Panel.setBackground(new java.awt.Color(198, 198, 198));
-        
-        lbCola = new JLabel("Cola: ");
-        lbCola.setBounds(745, 17, 40, 15);
-        lbCola.setVisible(true);
-        Panel.add(lbCola);
-        
-        tfCola = new JTextField("");
-        tfCola.setBounds(795, 15, 80, 20);
-        tfCola.setVisible(true);
-        Panel.add(tfCola);
-        
-        lbRafaga = new JLabel("Rafaga: ");
-        lbRafaga.setBounds(740, 28, 60, 45);
-        lbRafaga.setVisible(true);
-        Panel.add(lbRafaga);
-        
-        tfRafaga = new JTextField("");
-        tfRafaga.setBounds(795, 40, 80, 20);
-        tfRafaga.setVisible(true);
-        Panel.add(tfRafaga);
-        
 
         btBloquear = new JButton("Bloquear proceso");
-        btBloquear.setBounds(1000, 15, 200, 45);
+        btBloquear.setBounds(520, 15, 200, 45);
         btBloquear.setVisible(true);
         btBloquear.addActionListener(this);
         Panel.add(btBloquear);
         Panel.setBackground(new java.awt.Color(198, 198, 198));
         
         btDesbloquear = new JButton("Desbloquear proceso");
-        btDesbloquear.setBounds(1370, 15, 200, 45);
+        btDesbloquear.setBounds(740, 15, 200, 45);
         btDesbloquear.setVisible(true);
         btDesbloquear.addActionListener(this);
         Panel.add(btDesbloquear);
         Panel.setBackground(new java.awt.Color(198, 198, 198));
         
         lbTiempo = new JLabel("Tiempo: " + String.valueOf(tiempo), SwingConstants.CENTER);
-        lbTiempo.setBounds(1620, 15, 200, 45);
+        lbTiempo.setBounds(960, 15, 200, 45);
         lbTiempo.setVisible(true);
         lbTiempo.setFont(new java.awt.Font("Cambria", 0, 29));
         Panel.add(lbTiempo);
@@ -236,7 +204,7 @@ public class GUI implements ActionListener {
     public JPanel Informacion() {
         JPanel Panel = new JPanel();
         Panel.setLayout(null);
-        Panel.setBounds(0, 800, 1900, 90);
+        Panel.setBounds(0, 800, 1280, 90);
         Panel.setFont(new java.awt.Font("Cambria", 2, 11));
         Panel.setBackground(new java.awt.Color(142, 142, 142));
 
@@ -244,7 +212,7 @@ public class GUI implements ActionListener {
         lbInformacion.setText("Brayan A. Paredes, Kevin A. Borda, Mateo Yate G. - UDistrital - 2020-1");
         lbInformacion.setFont(new java.awt.Font("Cambria", 0, 20));
         lbInformacion.setForeground(Color.white);
-        lbInformacion.setBounds(650, 15, 700, 40);
+        lbInformacion.setBounds(250, 15, 700, 40);
         lbInformacion.setVisible(true);
         lbInformacion.setHorizontalAlignment(SwingConstants.CENTER);
         //lbAsesora.setIcon(new ImageIcon("./imagenes/BankCashier.png"));
@@ -256,7 +224,7 @@ public class GUI implements ActionListener {
     public JPanel ColaBloqueos(){
         JPanel Panel = new JPanel();
         Panel.setLayout(null);
-        Panel.setBounds(0, 690, 1900, 120);
+        Panel.setBounds(0, 690, 1280, 120);
         Panel.setFont(new java.awt.Font("Cambria", 2, 11));
         Panel.setBackground(new java.awt.Color(0, 142, 142));
         
@@ -280,7 +248,7 @@ public class GUI implements ActionListener {
         modelTbBloqueados.addRow(new Object[]{"Prioridad","Proceso", "T. Llegada", "Rafaga", "T. Comienzo", "T. Bloqueo", "Rafaga restante"});
 
         tbBloqueados.getTableHeader().setReorderingAllowed(false);
-        tbBloqueados.setBounds(0, 0, 1900, 280);
+        tbBloqueados.setBounds(0, 0, 1280, 280);
         tbBloqueados.setVisible(true);
 
         tbBloqueados.setPreferredScrollableViewportSize(new Dimension(450, 63));
@@ -296,32 +264,10 @@ public class GUI implements ActionListener {
 
         if (e.getSource() == btIniciar) {
             lbTiempo.setText("Tiempo: " + String.valueOf(tiempo + 1));
-            
-            
 
             if (clientes.longitud() == 0) {
                 tiempo++;
-                JOptionPane.showMessageDialog(null, "La cola de Round Robin esta vacia");
-                
-                if (clientesPrioridades.longitud() == 0){
-                    tiempo++;
-                    JOptionPane.showMessageDialog(null, "La cola de Prioridades esta vacia");
-                    
-                    if  (clientesSRTF.longitud() == 0){
-                        tiempo++;
-                        JOptionPane.showMessageDialog(null, "Las tres colas están vacias :(");
-                        
-                        
-                        
-                    //SRTF    
-                    } else {
-                        
-                    }
-                //Prioridades    
-                } else {
-                    
-                }                
-            //Round Robin    
+                JOptionPane.showMessageDialog(null, "La cola esta vacia");
             } else {
 
                 //Se setea la persona actual como la cabeza de la cola
@@ -599,7 +545,7 @@ public class GUI implements ActionListener {
         }
 
         for (int k = 0; k < colaOrg.size(); k++) {
-            clientesOrganizar.insert(colaOrg.get(k).prioridad, colaOrg.get(k).llegada, colaOrg.get(k).rafaga, colaOrg.get(k).nombre, colaOrg.get(k).fila, colaOrg.get(k).rafagaRestante, colaOrg.get(k).tiempoBloqueo, colaOrg.get(k).rafagaEjecutada, colaOrg.get(k).tfPrecursor);
+            clientes2.insert(colaOrg.get(k).prioridad, colaOrg.get(k).llegada, colaOrg.get(k).rafaga, colaOrg.get(k).nombre, colaOrg.get(k).fila, colaOrg.get(k).rafagaRestante, colaOrg.get(k).tiempoBloqueo, colaOrg.get(k).rafagaEjecutada, colaOrg.get(k).tfPrecursor);
         }
 
     }

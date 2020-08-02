@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gantt;
+package srtf;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -44,8 +44,8 @@ public class Principal {
         ventana.add(PaInfo);
         ventana.add(PaBloqueados);
         
-        ventana.setSize(1900, 900);
-        ventana.setTitle("Proyecto Multicolas SO");
+        ventana.setSize(1280, 900);
+        ventana.setTitle("Algoritmo de Planificacion SRTF");
         
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setLocationRelativeTo(null);
@@ -55,7 +55,4 @@ public class Principal {
         
         
     }
-    
-    
-    
 }
