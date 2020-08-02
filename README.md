@@ -1,5 +1,5 @@
-# Algoritmo Round Robin
- Programa que permite realizar la simulacion del algoritmo de planificación expulsivo Round Robin teniendo en cuenta la prioridad y un valor de un Quantum determinado.
+# Proyecto Final - Sistemas Operativos
+ Programa que permite realizar la simulacion de un algoritmo multicolas con los componentes Round Robin, SRTF & Proridades.
 
 *Nota: Ejecutar en NetBeans.*
 
