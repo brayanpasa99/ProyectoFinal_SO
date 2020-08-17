@@ -46,7 +46,7 @@ public class Cola {
             Node tmp = Cabecera;
             while (tmp != null) {
                 clientes = clientes + "CLIENTE: " + tmp.nombre + " - N° RECIBOS: " + tmp.getInfo() + "." + "\n";
-                ClientesArr.add("CLIENTE: " + tmp.nombre + " - N° RECIBOS: " + tmp.getInfo() + ".");
+                ClientesArr.add(tmp.nombre);
                 tmp = tmp.getNext();
             }
         }

@@ -6,6 +6,7 @@
 package gantt;
 
 import java.awt.Dimension;
+import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ public class Principal {
         JPanel PaBotonera = GU.Botonera();
         JPanel PaInfo = GU.Informacion();
         JPanel PaBloqueados = GU.ColaBloqueos();
+        JPanel PaTablas = GU.InformacionColas();
         
         ventana = new JFrame("");
         
@@ -43,8 +45,11 @@ public class Principal {
         ventana.add(PaBotonera);
         ventana.add(PaInfo);
         ventana.add(PaBloqueados);
+        ventana.add(PaTablas);
+        //ventana.setBounds(1900, 950, 0, 0);
         
-        ventana.setSize(1900, 900);
+        ventana.setSize(1900, 1050);
+        
         ventana.setTitle("Proyecto Multicolas SO");
         
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
