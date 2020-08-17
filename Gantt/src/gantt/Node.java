@@ -27,9 +27,10 @@ public class Node {
     public String nombre;
     public int tfPrecursor;
     public Node next;
+    public int numCola;
         
 
-    public Node(int prior, int llegada, int raf, String nom, int fil, int rRestante, int tBloqueo, int rEjecutada, int tfPrec) {
+    public Node(int prior, int llegada, int raf, String nom, int fil, int rRestante, int tBloqueo, int rEjecutada, int tfPrec, int numCola) {
         rafaga = raf;
         next = null;
         nombre = nom;
@@ -40,6 +41,7 @@ public class Node {
         prioridad = prior;
         rafagaEjecutada = rEjecutada;
         tfPrecursor = tfPrec;
+        this.numCola=numCola;
     }
 
     public void setRafaga(int o) {

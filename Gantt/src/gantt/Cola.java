@@ -23,8 +23,8 @@ public class Cola {
         Cabecera = null;
     }
 
-    public void insert(int prior, int llegada, int rafaga, String nom, int fil, int rRestante, int tBloqueo, int tEjecutado, int tPrec) {
-        Node tmp = new Node(prior, llegada, rafaga, nom, fil, rRestante, tBloqueo, tEjecutado, tPrec);
+    public void insert(int prior, int llegada, int rafaga, String nom, int fil, int rRestante, int tBloqueo, int tEjecutado, int tPrec, int cola) {
+        Node tmp = new Node(prior, llegada, rafaga, nom, fil, rRestante, tBloqueo, tEjecutado, tPrec, cola);
         int l = longitud();
         if (l > 0) {
         Node aux1 = Cabecera;
@@ -46,7 +46,7 @@ public class Cola {
             Node tmp = Cabecera;
             while (tmp != null) {
                 clientes = clientes + "CLIENTE: " + tmp.nombre + " - N° RECIBOS: " + tmp.getInfo() + "." + "\n";
-                ClientesArr.add("CLIENTE: " + tmp.nombre + " - N° RECIBOS: " + tmp.getInfo() + ".");
+                ClientesArr.add(tmp.nombre);
                 tmp = tmp.getNext();
             }
         }
